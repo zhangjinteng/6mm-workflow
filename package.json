@@ -1,0 +1,41 @@
+{
+  "name": "zjt-workflow",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.14.0",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0 --port 16080",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0 --port 16080",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "test:api": "tsx scripts/smoke-workflow-nodes.ts",
+    "migrate:nodes": "node scripts/migrate-workflow-nodes.mjs"
+  },
+  "dependencies": {
+    "gpt-tokenizer": "3.4.0",
+    "json5": "^2.2.3",
+    "lodash": "4.17.23",
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/lodash": "^4.17.27",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.6",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
+  }
+}

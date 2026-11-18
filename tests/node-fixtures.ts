@@ -1,0 +1,25 @@
+import type { NodeType } from "../src/server/workflow-nodes/registry";
+
+export const fixtures = {
+  workflowStart: { params: { userChatInput: "hello" } },
+  datasetConcatNode: { params: {} },
+  answerNode: { params: { text: "hello" } },
+  variableUpdate: { params: { updateList: [] } },
+  textEditor: { params: { system_textareaInput: "Hello {{name}}" }, variables: { name: "ZJT" } },
+  customFeedback: { params: { system_textareaInput: "feedback" } },
+  ifElseNode: { params: { ifElseList: [] } },
+  userSelect: { params: { description: "choose", userSelectOptions: [{ key: "a", value: "A" }] } },
+  formInput: { params: { description: "fill", userInputForms: [{ key: "name", type: "input" }] } },
+  parallelRun: { params: { loopInputArray: [] } },
+  loopRun: { params: { loopRunMode: "array", loopRunInputArray: [] } },
+  loopRunStart: { params: { loopRunMode: "array", loopStartInput: "item", loopStartIndex: 2 } },
+  loopRunBreak: { params: {} },
+  loopStart: { params: { loopStartInput: "item", loopStartIndex: 2 } },
+  loopEnd: { params: { loopEndInput: "done" } },
+  stopTool: { params: {} },
+  toolParams: { params: { question: "hello" } },
+  pluginInput: { params: { question: "hello" } },
+  pluginOutput: { params: { answer: "hello" } },
+  loop: { params: { loopInputArray: [] } },
+  userGuide: { params: {}, variables: { city: "Hangzhou" } },
+} satisfies Record<NodeType, unknown>;

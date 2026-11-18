@@ -1,0 +1,586 @@
+{
+  "source": "workflow-zjt/fastify/vendor",
+  "nodes": [
+    {
+      "nodeType": "workflowStart",
+      "source": "service/core/workflow/dispatch/init/workflowStart.tsx",
+      "exportName": "dispatchWorkflowStart",
+      "path": "/api/workflow/nodes/workflowStart"
+    },
+    {
+      "nodeType": "datasetConcatNode",
+      "source": "service/core/workflow/dispatch/dataset/concat.ts",
+      "exportName": "dispatchDatasetConcat",
+      "path": "/api/workflow/nodes/datasetConcatNode"
+    },
+    {
+      "nodeType": "answerNode",
+      "source": "service/core/workflow/dispatch/tools/answer.ts",
+      "exportName": "dispatchAnswer",
+      "path": "/api/workflow/nodes/answerNode"
+    },
+    {
+      "nodeType": "variableUpdate",
+      "source": "service/core/workflow/dispatch/tools/runUpdateVar.ts",
+      "exportName": "dispatchUpdateVariable",
+      "path": "/api/workflow/nodes/variableUpdate"
+    },
+    {
+      "nodeType": "textEditor",
+      "source": "service/core/workflow/dispatch/tools/textEditor.ts",
+      "exportName": "dispatchTextEditor",
+      "path": "/api/workflow/nodes/textEditor"
+    },
+    {
+      "nodeType": "customFeedback",
+      "source": "service/core/workflow/dispatch/tools/customFeedback.ts",
+      "exportName": "dispatchCustomFeedback",
+      "path": "/api/workflow/nodes/customFeedback"
+    },
+    {
+      "nodeType": "ifElseNode",
+      "source": "service/core/workflow/dispatch/tools/runIfElse.ts",
+      "exportName": "dispatchIfElse",
+      "path": "/api/workflow/nodes/ifElseNode"
+    },
+    {
+      "nodeType": "userSelect",
+      "source": "service/core/workflow/dispatch/interactive/userSelect.ts",
+      "exportName": "dispatchUserSelect",
+      "path": "/api/workflow/nodes/userSelect"
+    },
+    {
+      "nodeType": "formInput",
+      "source": "service/core/workflow/dispatch/interactive/formInput.ts",
+      "exportName": "dispatchFormInput",
+      "path": "/api/workflow/nodes/formInput"
+    },
+    {
+      "nodeType": "parallelRun",
+      "source": "service/core/workflow/dispatch/parallelRun/runParallelRun.ts",
+      "exportName": "dispatchParallelRun",
+      "path": "/api/workflow/nodes/parallelRun"
+    },
+    {
+      "nodeType": "loopRun",
+      "source": "service/core/workflow/dispatch/loopRun/runLoopRun.ts",
+      "exportName": "dispatchLoopRun",
+      "path": "/api/workflow/nodes/loopRun"
+    },
+    {
+      "nodeType": "loopRunStart",
+      "source": "service/core/workflow/dispatch/loopRun/runLoopRunStart.ts",
+      "exportName": "dispatchLoopRunStart",
+      "path": "/api/workflow/nodes/loopRunStart"
+    },
+    {
+      "nodeType": "loopRunBreak",
+      "source": "service/core/workflow/dispatch/loopRun/runLoopRunBreak.ts",
+      "exportName": "dispatchLoopRunBreak",
+      "path": "/api/workflow/nodes/loopRunBreak"
+    },
+    {
+      "nodeType": "loopStart",
+      "source": "service/core/workflow/dispatch/loop/runLoopStart.ts",
+      "exportName": "dispatchLoopStart",
+      "path": "/api/workflow/nodes/loopStart"
+    },
+    {
+      "nodeType": "loopEnd",
+      "source": "service/core/workflow/dispatch/loop/runLoopEnd.ts",
+      "exportName": "dispatchLoopEnd",
+      "path": "/api/workflow/nodes/loopEnd"
+    },
+    {
+      "nodeType": "stopTool",
+      "source": "service/core/workflow/dispatch/ai/toolcall/stopTool.ts",
+      "exportName": "dispatchStopToolCall",
+      "path": "/api/workflow/nodes/stopTool"
+    },
+    {
+      "nodeType": "toolParams",
+      "source": "service/core/workflow/dispatch/ai/toolcall/toolParams.ts",
+      "exportName": "dispatchToolParams",
+      "path": "/api/workflow/nodes/toolParams"
+    },
+    {
+      "nodeType": "pluginInput",
+      "source": "service/core/workflow/dispatch/plugin/runInput.ts",
+      "exportName": "dispatchPluginInput",
+      "path": "/api/workflow/nodes/pluginInput"
+    },
+    {
+      "nodeType": "pluginOutput",
+      "source": "service/core/workflow/dispatch/plugin/runOutput.ts",
+      "exportName": "dispatchPluginOutput",
+      "path": "/api/workflow/nodes/pluginOutput"
+    },
+    {
+      "nodeType": "loop",
+      "source": "service/core/workflow/dispatch/abandoned/runLoop.ts",
+      "exportName": "dispatchLoop",
+      "path": "/api/workflow/nodes/loop"
+    },
+    {
+      "nodeType": "userGuide",
+      "source": "service/core/workflow/dispatch/init/systemConfig.tsx",
+      "exportName": "dispatchSystemConfig",
+      "path": "/api/workflow/nodes/userGuide"
+    }
+  ],
+  "files": [
+    {
+      "file": "service/core/workflow/dispatch/init/workflowStart.tsx",
+      "exports": [
+        "dispatchWorkflowStart"
+      ],
+      "sha256": "3bc4ff09bdbc537a9b32f9c94835a6b742f0c0927fb9cfa70d9daf8c5015b350"
+    },
+    {
+      "file": "service/core/workflow/dispatch/dataset/concat.ts",
+      "exports": [
+        "dispatchDatasetConcat"
+      ],
+      "sha256": "5ebec8a8be89185f1b86819932d0690e3694d28e394dfe64a487fb3c59f21e35"
+    },
+    {
+      "file": "service/core/workflow/dispatch/tools/answer.ts",
+      "exports": [
+        "dispatchAnswer"
+      ],
+      "sha256": "65bdc0911ef082c9797e09a91eb31aabe2a6c4626e53408d8fe29df63ab4ef3b"
+    },
+    {
+      "file": "service/core/workflow/dispatch/tools/runUpdateVar.ts",
+      "exports": [
+        "dispatchUpdateVariable"
+      ],
+      "sha256": "c30e42a3d567197a5ad37aed546aba0b7491912a4fdaa3bd7eadbf2c3de57833"
+    },
+    {
+      "file": "service/core/workflow/dispatch/tools/textEditor.ts",
+      "exports": [
+        "dispatchTextEditor"
+      ],
+      "sha256": "49c09324ed7213f11732cf236597e6e95870db3cf3b466945252802f99eb0c30"
+    },
+    {
+      "file": "service/core/workflow/dispatch/tools/customFeedback.ts",
+      "exports": [
+        "dispatchCustomFeedback"
+      ],
+      "sha256": "39508f32aec431f236f9e846bbdee99e41ac3fd4e7676c4cadd4a3cbe8ff7f76"
+    },
+    {
+      "file": "service/core/workflow/dispatch/tools/runIfElse.ts",
+      "exports": [
+        "dispatchIfElse"
+      ],
+      "sha256": "fcd895e22cb23d6ced87703564f3a903e21ffc48ef82318094e77fd7f0ca1a2b"
+    },
+    {
+      "file": "service/core/workflow/dispatch/interactive/userSelect.ts",
+      "exports": [
+        "dispatchUserSelect"
+      ],
+      "sha256": "b869ac66824793ca08e1f79b45b81bda07944fe9ca1f32157a2c041f1baf7b90"
+    },
+    {
+      "file": "service/core/workflow/dispatch/interactive/formInput.ts",
+      "exports": [
+        "dispatchFormInput"
+      ],
+      "sha256": "04d05be67ebac1a46128e3d3287ed2138eaa48245d594cc6ae5059422c1256c0"
+    },
+    {
+      "file": "service/core/workflow/dispatch/parallelRun/runParallelRun.ts",
+      "exports": [
+        "dispatchParallelRun"
+      ],
+      "sha256": "bf30439ee82d311bf3d1772036c9a641812b8fa0ca56e6a24b1271a0d371a1ba"
+    },
+    {
+      "file": "service/core/workflow/dispatch/loopRun/runLoopRun.ts",
+      "exports": [
+        "dispatchLoopRun"
+      ],
+      "sha256": "9c187dcdb2e9e2469e1fc087d38e9e3df098a83a078aea88d092c69767ba8b0d"
+    },
+    {
+      "file": "service/core/workflow/dispatch/loopRun/runLoopRunStart.ts",
+      "exports": [
+        "dispatchLoopRunStart"
+      ],
+      "sha256": "e5c030e63f50f88578e2b63bf43c014341e669e87b689d7e18c34815a4662ce9"
+    },
+    {
+      "file": "service/core/workflow/dispatch/loopRun/runLoopRunBreak.ts",
+      "exports": [
+        "dispatchLoopRunBreak"
+      ],
+      "sha256": "ed62d148bc0191c78fd43025be43f7c01b5749c39cfbe3bfb798dfd2ecb16b62"
+    },
+    {
+      "file": "service/core/workflow/dispatch/loop/runLoopStart.ts",
+      "exports": [
+        "dispatchLoopStart"
+      ],
+      "sha256": "d41dd23bc6761258338b390e74cec0673d6631a64007897fd6bc7ae0031bbbaf"
+    },
+    {
+      "file": "service/core/workflow/dispatch/loop/runLoopEnd.ts",
+      "exports": [
+        "dispatchLoopEnd"
+      ],
+      "sha256": "d7aa6764c1f0d21c4e64ce07446d732daf61272d082889bc4747fa89aee37ea9"
+    },
+    {
+      "file": "service/core/workflow/dispatch/ai/toolcall/stopTool.ts",
+      "exports": [
+        "dispatchStopToolCall"
+      ],
+      "sha256": "fd74ac924530737b46c263818975418c1940b59dd474f7adf74734118dcb3bb1"
+    },
+    {
+      "file": "service/core/workflow/dispatch/ai/toolcall/toolParams.ts",
+      "exports": [
+        "dispatchToolParams"
+      ],
+      "sha256": "e43f8a77229d667c580e5910bfbbddbe76cee9dbbeb5f7c054f0ff8a9f116e70"
+    },
+    {
+      "file": "service/core/workflow/dispatch/plugin/runInput.ts",
+      "exports": [
+        "dispatchPluginInput"
+      ],
+      "sha256": "d7e1e31fa210aebf8768ce05f9f1693f5b2204abd99af559dd6f6d9978ef6003"
+    },
+    {
+      "file": "service/core/workflow/dispatch/plugin/runOutput.ts",
+      "exports": [
+        "dispatchPluginOutput"
+      ],
+      "sha256": "2713dd2ce3925167ab60cc95e0230152f4d850bd1d18de7523e821bab2f9ca64"
+    },
+    {
+      "file": "service/core/workflow/dispatch/abandoned/runLoop.ts",
+      "exports": [
+        "dispatchLoop"
+      ],
+      "sha256": "74283daff152a3c72c21fac592f77070b07ca3a4f8975957691ef38751f8ce12"
+    },
+    {
+      "file": "service/core/workflow/dispatch/init/systemConfig.tsx",
+      "exports": [
+        "dispatchSystemConfig"
+      ],
+      "sha256": "ab5428d5ebfab37b8295c062dafaec535aa51bc6b1fe5b536b41c70776f9f6b0"
+    },
+    {
+      "file": "service/worker/countGptMessagesTokens/count.ts",
+      "exports": [
+        "countPromptTokensInWorker"
+      ],
+      "sha256": "d57290eca3ab28ebc78ec8a239661df46de2b3cf8468e37e25f639ae190dae54"
+    },
+    {
+      "file": "global/core/chat/adapt.ts",
+      "exports": [
+        "chatValue2RuntimePrompt"
+      ],
+      "sha256": "e1ed22d3675f4127571873030d4aec9b0b2733fec4c51d5f315309743b81657e"
+    },
+    {
+      "file": "global/core/workflow/constants.ts",
+      "exports": [
+        "NodeInputKeyEnum",
+        "NodeOutputKeyEnum",
+        "ParallelRunStatusEnum",
+        "VARIABLE_NODE_ID",
+        "WorkflowIOValueTypeEnum"
+      ],
+      "sha256": "32588fcd5980a4d87ff7a77652c27db30869a99a8cde63422bc252748ade6e6a"
+    },
+    {
+      "file": "global/core/workflow/runtime/constants.ts",
+      "exports": [
+        "DispatchNodeResponseKeyEnum",
+        "SseResponseEventEnum"
+      ],
+      "sha256": "735379e6913073ad4fac17db95708e96d1837f9e79c192ff20b1582a376b6e07"
+    },
+    {
+      "file": "global/core/dataset/search/utils.ts",
+      "exports": [
+        "datasetSearchResultConcat"
+      ],
+      "sha256": "ae70a29f4d49c5fc329cca09ebdca2839b328e97a8a3d83c6532903c26f96a99"
+    },
+    {
+      "file": "service/core/workflow/utils/index.ts",
+      "exports": [
+        "filterSearchResultsByMaxChars"
+      ],
+      "sha256": "b1b07753ba1155b0cdd559fb89c89b507191963eb91644b25f6228fa51daca81"
+    },
+    {
+      "file": "global/core/workflow/runtime/utils.ts",
+      "exports": [
+        "formatVariableValByType",
+        "getReferenceVariableValue",
+        "replaceEditorVariable",
+        "rewriteNodeOutputByHistories",
+        "storeEdges2RuntimeEdges",
+        "textAdaptGptResponse",
+        "valueTypeFormat"
+      ],
+      "sha256": "3ff780d970e4ff22e92308a4a6cc75ff0bbbf598f89dea3830c86713a786d91d"
+    },
+    {
+      "file": "global/core/workflow/node/constant.ts",
+      "exports": [
+        "FlowNodeInputTypeEnum",
+        "FlowNodeOutputTypeEnum",
+        "FlowNodeTypeEnum"
+      ],
+      "sha256": "f26f8ddb2a7f286abe1621df4a80173504aa7a57bd2c227143930422ded63713"
+    },
+    {
+      "file": "global/core/workflow/utils.ts",
+      "exports": [
+        "getElseIFLabel",
+        "getHandleId",
+        "isValidReferenceValue",
+        "isValidReferenceValueFormat"
+      ],
+      "sha256": "e94fa2ba666b783039d58e0d335cb0f98f772510c62ccfc7b3a07a2dc49dc1c6"
+    },
+    {
+      "file": "global/common/string/tools.ts",
+      "exports": [
+        "checkStrOversize",
+        "replaceSensitiveText",
+        "replaceVariable",
+        "valToStr"
+      ],
+      "sha256": "212594823c7ab454e1b3c009dd05e854d1a374f17c7542ab47e5a7e4dd1aef85"
+    },
+    {
+      "file": "global/core/workflow/template/system/ifElse/constant.ts",
+      "exports": [
+        "IfElseResultEnum",
+        "VariableConditionEnum"
+      ],
+      "sha256": "8eb051f8024c194b29dfa58e3b54a18abb90f08ff97720c6660c6e5db3073f72"
+    },
+    {
+      "file": "service/common/secret/utils.ts",
+      "exports": [
+        "anyValueDecrypt"
+      ],
+      "sha256": "252b42f885805594e560645acaaa77fef24da45193bbe8d1d82aec14fdf56e98"
+    },
+    {
+      "file": "global/common/system/utils.ts",
+      "exports": [
+        "batchRun"
+      ],
+      "sha256": "6a27bc14a389cd1386f6f0003ca654d1860bdb9fa2d80edc4f467d9b513ce924"
+    },
+    {
+      "file": "service/core/workflow/dispatch/parallelRun/service.ts",
+      "exports": [
+        "aggregateParallelResults",
+        "buildTaskRuntimeContext",
+        "clampParallelConcurrency",
+        "clampParallelRetryTimes",
+        "parseTaskError",
+        "parseTaskResponse"
+      ],
+      "sha256": "3f6ce8dd09c62cb183e40d3ba6e7f48442e3d9ecc76ac39b95b96809984ec8a5"
+    },
+    {
+      "file": "service/core/workflow/dispatch/utils/index.ts",
+      "exports": [
+        "collectResponseFeedbacks",
+        "getNodeErrResponse",
+        "injectNestedStartInputs",
+        "pushSubWorkflowUsage",
+        "safePoints"
+      ],
+      "sha256": "fd22c0008b7550015da85920193f527874e5709583ace9d78bc140b2f6bc713a"
+    },
+    {
+      "file": "global/common/error/utils.ts",
+      "exports": [
+        "getErrText"
+      ],
+      "sha256": "a19d83f8ecbb2f49040cd0eefcddc7a91d8257184181fc6b9b7a66eccc8a160e"
+    },
+    {
+      "file": "global/core/workflow/template/system/loopRun/loopRun.ts",
+      "exports": [
+        "LoopRunModeEnum"
+      ],
+      "sha256": "21de245464feb8e0f66111131c1bf2997af7e6208a56eeaa4a60e060430f9be0"
+    },
+    {
+      "file": "global/common/i18n/utils.ts",
+      "exports": [
+        "i18nT"
+      ],
+      "sha256": "bafddef6f3d55971a73b4ddea47bd3fad9081672ef2e150c39534ca668da133c"
+    },
+    {
+      "file": "service/core/workflow/dispatch/loopRun/service.ts",
+      "exports": [
+        "extractFinishedNodeIds",
+        "hasLoopRunBreakChild",
+        "injectLoopRunStart",
+        "isLoopBreakHit",
+        "pickCustomOutputInputs",
+        "readCustomOutputSnapshot"
+      ],
+      "sha256": "34e746b3f17cb96796f82b33b6ea0bafc1a758d759d0a7b1c07f65a13eef3c6d"
+    },
+    {
+      "file": "global/core/chat/constants.ts",
+      "exports": [
+        "ChatFileTypeEnum"
+      ],
+      "sha256": "1d55ddc233d6396d42b2a4e9f7ebfed67fd9d50b3432fb880adb3586a0db88ba"
+    },
+    {
+      "file": "service/core/workflow/dispatch/loop/service.ts",
+      "exports": [
+        "getNestedEndOutputValue"
+      ],
+      "sha256": "1db0d36edd3f54c5fcf4b172dcbeafb306585374c9422895b807acbcfee7735a"
+    },
+    {
+      "file": "global/core/dataset/constants.ts",
+      "exports": [
+        "SearchScoreTypeEnum"
+      ],
+      "sha256": "c77bfff2d94a2560cb2d78e2be78e488c72fc524ae5437d53841a9db7743c161"
+    },
+    {
+      "file": "global/core/ai/constants.ts",
+      "exports": [
+        "ChatCompletionRequestMessageRoleEnum"
+      ],
+      "sha256": "2bbd36596ce4cf73fdcdd9ddd70a875282d7e8944add92f5842a26606018547b"
+    },
+    {
+      "file": "global/common/secret/utils.ts",
+      "exports": [
+        "isSecretValue"
+      ],
+      "sha256": "00946b96e8561334f84b6158a2ca7554a8868c75122ee4da4b05c78ea9f6c7f2"
+    },
+    {
+      "file": "global/common/error/errorCode.ts",
+      "exports": [
+        "ERROR_RESPONSE"
+      ],
+      "sha256": "ff075848679289c925a829d2cb12d465c8bf1600ca799b239b755715d2a0df76"
+    },
+    {
+      "file": "global/common/error/code/app.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "8615f7449b9ea71b8e10ea963a5d3f4615cfce211562010f9c4d19468760dae5"
+    },
+    {
+      "file": "global/common/error/code/chat.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "8dcc3fe897a232cdd99465667f90800227c5446009591c90d9637c2f1f82113a"
+    },
+    {
+      "file": "global/common/error/code/dataset.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "20c0c9f51ac6acd9f3e2138b4e1c116e05bfdfa5ea0d15861281561b440dad96"
+    },
+    {
+      "file": "global/common/error/code/openapi.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "a0269b09ff0ce45cd08fca5e037b2001aca72cd0ddd31bcd5cc8c5d48b59cd3c"
+    },
+    {
+      "file": "global/common/error/code/plugin.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "9535f13bb625614fda8c232eb21430c9b7cc4a7cc4140168aaab9e117b004991"
+    },
+    {
+      "file": "global/common/error/code/outLink.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "69dbf69b5c6fe10230478273f4374b4a7bb4891e6111e088c4eb9e2d1e0f7163"
+    },
+    {
+      "file": "global/common/error/code/team.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "54f70af7955d4b9a71c27dbd1a8a46faa3d98fc5304b76d25b271b249bf75eb4"
+    },
+    {
+      "file": "global/common/error/code/user.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "5e4c6408b56c2cc078d9e602c2c3f94894a26c99b744b6824c92a0d69d13e13c"
+    },
+    {
+      "file": "global/common/error/code/common.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "f7c5b657a9ce613ef5915ec6bb04a3a23ead26b73ebf689eead946e8d1d809ce"
+    },
+    {
+      "file": "global/common/error/code/s3.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "20b81b0ee7c49937322068a927411a9f00b9010c0876dece4785ddf484eaef28"
+    },
+    {
+      "file": "global/common/error/code/system.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "f14330ae374be8e32f14f37d1ed80ad6618183f768ac25dc3557c5fb205f5b67"
+    },
+    {
+      "file": "global/common/error/code/skill.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "d95f07361498f06a8b4be3d5d9b67bfcac2d968ffe78394d1aa52b096036b366"
+    }
+  ],
+  "packages": [
+    "gpt-tokenizer/encoding/o200k_base",
+    "json5",
+    "lodash"
+  ],
+  "boundaries": {
+    "service/core/workflow/dispatch/index.ts": "engine",
+    "service/env.ts": "environment",
+    "service/common/logger/index.ts": "logger",
+    "service/common/s3/sources/chat/index.ts": "files",
+    "service/common/secret/aes256gcm.ts": "secrets",
+    "service/common/string/tiktoken/index.ts": "tokens"
+  }
+}
