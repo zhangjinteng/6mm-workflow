@@ -1,0 +1,191 @@
+{
+  "source": "fastify/vendor",
+  "files": [
+    {
+      "file": "service/worker/readFile/extension/rawText.ts",
+      "exports": [
+        "readFileRawText"
+      ],
+      "sha256": "682ff44840077bc06fa0fd67781deac0b5cea267a6a4887c1818bd77669b12b5"
+    },
+    {
+      "file": "service/worker/readFile/extension/csv.ts",
+      "exports": [
+        "readCsvRawText"
+      ],
+      "sha256": "f2a808b21a39b78283d168b6f1abe205c8bb96976bbfd0e9712cfe353d6e7831"
+    },
+    {
+      "file": "service/worker/readFile/extension/html.ts",
+      "exports": [
+        "readHtmlRawText"
+      ],
+      "sha256": "1dc6c70d606343d1f57aa35ae33a5933d8351b59aaed5e5a0bdf87cc8a27c36d"
+    },
+    {
+      "file": "service/worker/readFile/extension/docx.ts",
+      "exports": [
+        "readDocsFile"
+      ],
+      "sha256": "201f610598ba5bd3a02ebe2a46cabdd0ccd503bdb1821c50e5773f1fd6a81412"
+    },
+    {
+      "file": "service/worker/readFile/extension/pdf.ts",
+      "exports": [
+        "readPdfFile"
+      ],
+      "sha256": "aaffe2e9951105f4e72b90fd5b86ed249d73de6185975552aac0702b34087c70"
+    },
+    {
+      "file": "global/common/string/markdown.ts",
+      "exports": [
+        "htmlTable2Md",
+        "matchMdImg",
+        "simpleMarkdownText"
+      ],
+      "sha256": "909649e170ea0cbcb6bdab379f21f9e1f9b8296dbdbbca62924f372e6c1405c1"
+    },
+    {
+      "file": "global/common/string/textSplitter.ts",
+      "exports": [
+        "splitText2Chunks"
+      ],
+      "sha256": "982788469a83cca8c1d5c97cf207a6fff06480458dcc730b9a1019da2b132566"
+    },
+    {
+      "file": "service/worker/htmlStr2Md/utils.ts",
+      "exports": [
+        "html2md"
+      ],
+      "sha256": "6af73d48098435b0c732ea631409189f72e4326e940b56d31ead8574bb8bdf11"
+    },
+    {
+      "file": "global/common/string/tools.ts",
+      "exports": [
+        "getNanoid",
+        "replaceSensitiveText",
+        "simpleText"
+      ],
+      "sha256": "212594823c7ab454e1b3c009dd05e854d1a374f17c7542ab47e5a7e4dd1aef85"
+    },
+    {
+      "file": "global/core/dataset/training/utils.ts",
+      "exports": [
+        "defaultMaxChunkSize"
+      ],
+      "sha256": "0ea105de2e57faa8f8d68e7522dde01da1f311732346a7e9ac66285f061a48bb"
+    },
+    {
+      "file": "global/common/error/utils.ts",
+      "exports": [
+        "getErrText"
+      ],
+      "sha256": "a19d83f8ecbb2f49040cd0eefcddc7a91d8257184181fc6b9b7a66eccc8a160e"
+    },
+    {
+      "file": "global/common/string/utils.ts",
+      "exports": [
+        "getTextValidLength"
+      ],
+      "sha256": "e3f8a0715d793bcbb7ce2722e99287215033644b56ebda9116dd9c400aced0e7"
+    },
+    {
+      "file": "global/common/error/errorCode.ts",
+      "exports": [
+        "ERROR_RESPONSE"
+      ],
+      "sha256": "ff075848679289c925a829d2cb12d465c8bf1600ca799b239b755715d2a0df76"
+    },
+    {
+      "file": "global/common/error/code/app.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "8615f7449b9ea71b8e10ea963a5d3f4615cfce211562010f9c4d19468760dae5"
+    },
+    {
+      "file": "global/common/error/code/chat.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "8dcc3fe897a232cdd99465667f90800227c5446009591c90d9637c2f1f82113a"
+    },
+    {
+      "file": "global/common/error/code/dataset.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "20c0c9f51ac6acd9f3e2138b4e1c116e05bfdfa5ea0d15861281561b440dad96"
+    },
+    {
+      "file": "global/common/error/code/openapi.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "a0269b09ff0ce45cd08fca5e037b2001aca72cd0ddd31bcd5cc8c5d48b59cd3c"
+    },
+    {
+      "file": "global/common/error/code/plugin.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "9535f13bb625614fda8c232eb21430c9b7cc4a7cc4140168aaab9e117b004991"
+    },
+    {
+      "file": "global/common/error/code/outLink.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "69dbf69b5c6fe10230478273f4374b4a7bb4891e6111e088c4eb9e2d1e0f7163"
+    },
+    {
+      "file": "global/common/error/code/team.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "54f70af7955d4b9a71c27dbd1a8a46faa3d98fc5304b76d25b271b249bf75eb4"
+    },
+    {
+      "file": "global/common/error/code/user.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "5e4c6408b56c2cc078d9e602c2c3f94894a26c99b744b6824c92a0d69d13e13c"
+    },
+    {
+      "file": "global/common/error/code/common.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "f7c5b657a9ce613ef5915ec6bb04a3a23ead26b73ebf689eead946e8d1d809ce"
+    },
+    {
+      "file": "global/common/error/code/s3.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "20b81b0ee7c49937322068a927411a9f00b9010c0876dece4785ddf484eaef28"
+    },
+    {
+      "file": "global/common/error/code/system.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "f14330ae374be8e32f14f37d1ed80ad6618183f768ac25dc3557c5fb205f5b67"
+    },
+    {
+      "file": "global/common/error/code/skill.ts",
+      "exports": [
+        "default"
+      ],
+      "sha256": "d95f07361498f06a8b4be3d5d9b67bfcac2d968ffe78394d1aa52b096036b366"
+    },
+    {
+      "file": "global/common/i18n/utils.ts",
+      "exports": [
+        "i18nT"
+      ],
+      "sha256": "bafddef6f3d55971a73b4ddea47bd3fad9081672ef2e150c39534ca668da133c"
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+[
+  {
+    "name": "parseTxt",
+    "route": "/api/workflow/nodes/parseTxt",
+    "reference": "service/worker/readFile/extension/rawText.ts",
+    "sha256": "682ff44840077bc06fa0fd67781deac0b5cea267a6a4887c1818bd77669b12b5"
+  },
+  {
+    "name": "parseMarkdown",
+    "route": "/api/workflow/nodes/parseMarkdown",
+    "reference": "service/worker/readFile/extension/rawText.ts",
+    "sha256": "682ff44840077bc06fa0fd67781deac0b5cea267a6a4887c1818bd77669b12b5"
+  },
+  {
+    "name": "parseCsv",
+    "route": "/api/workflow/nodes/parseCsv",
+    "reference": "service/worker/readFile/extension/csv.ts",
+    "sha256": "f2a808b21a39b78283d168b6f1abe205c8bb96976bbfd0e9712cfe353d6e7831"
+  },
+  {
+    "name": "parseHtml",
+    "route": "/api/workflow/nodes/parseHtml",
+    "reference": "service/worker/readFile/extension/html.ts",
+    "sha256": "1dc6c70d606343d1f57aa35ae33a5933d8351b59aaed5e5a0bdf87cc8a27c36d"
+  },
+  {
+    "name": "parsePdf",
+    "route": "/api/workflow/nodes/parsePdf",
+    "reference": "service/worker/readFile/extension/pdf.ts",
+    "sha256": "aaffe2e9951105f4e72b90fd5b86ed249d73de6185975552aac0702b34087c70"
+  },
+  {
+    "name": "parseDocx",
+    "route": "/api/workflow/nodes/parseDocx",
+    "reference": "service/worker/readFile/extension/docx.ts",
+    "sha256": "201f610598ba5bd3a02ebe2a46cabdd0ccd503bdb1821c50e5773f1fd6a81412"
+  },
+  {
+    "name": "parsePptx",
+    "route": "/api/workflow/nodes/parsePptx",
+    "reference": "service/worker/readFile/extension/pptx.ts",
+    "sha256": "12a8608d46ec13358e95070146ba0ca97739300c06de5562d0dabb8678cfc624"
+  },
+  {
+    "name": "parseXlsx",
+    "route": "/api/workflow/nodes/parseXlsx",
+    "reference": "service/worker/readFile/extension/xlsx.ts",
+    "sha256": "e1e32becf1a23657386de78f0a87222f28118e359e16f323e1946f6186a9e912"
+  },
+  {
+    "name": "parsePdfCustom",
+    "route": "/api/workflow/nodes/parsePdfCustom",
+    "reference": "service/common/file/read/utils.ts",
+    "sha256": "d8c40cef25f4f6eb96ef9a577e43476db60ddbb5a9256ccb63bd6af706a6a056"
+  },
+  {
+    "name": "parsePdfTextIn",
+    "route": "/api/workflow/nodes/parsePdfTextIn",
+    "reference": "service/thirdProvider/textin/index.ts",
+    "sha256": "02079b3cf233fc4d310f9da43833b65c300c0a157281fe66acca3bdcf728ecf3"
+  },
+  {
+    "name": "parsePdfDoc2x",
+    "route": "/api/workflow/nodes/parsePdfDoc2x",
+    "reference": "service/thirdProvider/doc2x/index.ts",
+    "sha256": "976aee188a675b21e6c9d929bbbe4913d3ce41270fd184b9859f243f49ea7c6d"
+  },
+  {
+    "name": "parseFile",
+    "route": "/api/workflow/nodes/parseFile",
+    "reference": "service/common/file/read/utils.ts",
+    "sha256": "d8c40cef25f4f6eb96ef9a577e43476db60ddbb5a9256ccb63bd6af706a6a056"
+  },
+  {
+    "name": "htmlToMarkdown",
+    "route": "/api/workflow/nodes/htmlToMarkdown",
+    "reference": "service/worker/htmlStr2Md/utils.ts",
+    "sha256": "6af73d48098435b0c732ea631409189f72e4326e940b56d31ead8574bb8bdf11"
+  },
+  {
+    "name": "textToChunks",
+    "route": "/api/workflow/nodes/textToChunks",
+    "reference": "global/common/string/textSplitter.ts",
+    "sha256": "982788469a83cca8c1d5c97cf207a6fff06480458dcc730b9a1019da2b132566"
+  },
+  {
+    "name": "previewFileChunks",
+    "route": "/api/workflow/nodes/previewFileChunks",
+    "reference": "global/common/string/textSplitter.ts",
+    "sha256": "982788469a83cca8c1d5c97cf207a6fff06480458dcc730b9a1019da2b132566"
+  },
+  {
+    "name": "readFiles",
+    "route": "/api/workflow/nodes/readFiles",
+    "reference": "service/core/workflow/dispatch/tools/readFiles.ts",
+    "sha256": "6e5f55e73053c50598b84c284f795a866eb8a86867696b30530941ec3e2faead"
+  },
+  {
+    "name": "moderateText",
+    "route": "/api/workflow/nodes/moderateText",
+    "reference": "service/core/chat/postTextCensor.ts",
+    "sha256": "d81bb432162319ff65030eb9c583d50806f8df3a8b263550a8644771dee1ab36"
+  },
+  {
+    "name": "listAuditLogs",
+    "route": "/api/workflow/nodes/listAuditLogs",
+    "reference": "service/support/user/audit/schema.ts",
+    "sha256": "4f8940d5e858940e30e46c55f0ff8c042b06abff90f196fe06c5c3c484b0e8d0"
+  },
+  {
+    "name": "modelChat",
+    "route": "/api/workflow/nodes/modelChat",
+    "reference": "service/core/ai/config.ts",
+    "sha256": "bb102710236cb0cbedeafad325ebfe64ec25c17faf3a38fe76d4190619e18c99"
+  },
+  {
+    "name": "modelEmbed",
+    "route": "/api/workflow/nodes/modelEmbed",
+    "reference": "service/core/ai/config.ts",
+    "sha256": "bb102710236cb0cbedeafad325ebfe64ec25c17faf3a38fe76d4190619e18c99"
+  },
+  {
+    "name": "modelRerank",
+    "route": "/api/workflow/nodes/modelRerank",
+    "reference": "service/core/ai/config.ts",
+    "sha256": "bb102710236cb0cbedeafad325ebfe64ec25c17faf3a38fe76d4190619e18c99"
+  },
+  {
+    "name": "modelTts",
+    "route": "/api/workflow/nodes/modelTts",
+    "reference": "service/core/ai/config.ts",
+    "sha256": "bb102710236cb0cbedeafad325ebfe64ec25c17faf3a38fe76d4190619e18c99"
+  },
+  {
+    "name": "modelStt",
+    "route": "/api/workflow/nodes/modelStt",
+    "reference": "service/core/ai/config.ts",
+    "sha256": "bb102710236cb0cbedeafad325ebfe64ec25c17faf3a38fe76d4190619e18c99"
+  }
+]
