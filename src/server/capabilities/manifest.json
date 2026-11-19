@@ -48,6 +48,48 @@
     "sha256": "e1e32becf1a23657386de78f0a87222f28118e359e16f323e1946f6186a9e912"
   },
   {
+    "name": "previewAgentTools",
+    "route": "/api/workflow/nodes/previewAgentTools",
+    "reference": "service/core/workflow/dispatch/ai/agent/adapter/toolCatalog.ts",
+    "sha256": "9ad6ef0172a4b09a00b25b54cb621c1820ca2669005e41ea5f1fc6145a2d443c"
+  },
+  {
+    "name": "runAgent",
+    "route": "/api/workflow/nodes/runAgent",
+    "reference": "service/core/workflow/dispatch/ai/agent/index.ts",
+    "sha256": "6b01fe982a7764707fdac4485ed265234382e81ecb9faca891e391069493b21d"
+  },
+  {
+    "name": "resumeAgent",
+    "route": "/api/workflow/nodes/resumeAgent",
+    "reference": "service/core/workflow/dispatch/ai/agent/index.ts",
+    "sha256": "6b01fe982a7764707fdac4485ed265234382e81ecb9faca891e391069493b21d"
+  },
+  {
+    "name": "compressHistory",
+    "route": "/api/workflow/nodes/compressHistory",
+    "reference": "service/core/ai/llm/compress/index.ts",
+    "sha256": "516f45f141be086fe3dde5499e5528df55d3e407ed68c4638f7381ac04348b4e"
+  },
+  {
+    "name": "compressFile",
+    "route": "/api/workflow/nodes/compressFile",
+    "reference": "service/core/workflow/dispatch/ai/agent/sub/file/index.ts",
+    "sha256": "32bd1ce5152bc63961cf7d1fdf2c7d534b4eed7164241fdd2950b021061d5564"
+  },
+  {
+    "name": "compressToolResult",
+    "route": "/api/workflow/nodes/compressToolResult",
+    "reference": "service/core/ai/llm/compress/index.ts",
+    "sha256": "516f45f141be086fe3dde5499e5528df55d3e407ed68c4638f7381ac04348b4e"
+  },
+  {
+    "name": "compressDatasetResults",
+    "route": "/api/workflow/nodes/compressDatasetResults",
+    "reference": "service/core/workflow/dispatch/ai/agent/sub/dataset/index.ts",
+    "sha256": "54ffa9872350c76492b12cdc72db752870ce6480a227cb6913788be9f5cd7233"
+  },
+  {
     "name": "sandboxReadFile",
     "route": "/api/workflow/nodes/sandboxReadFile",
     "reference": "service/core/ai/sandbox/toolCall/readFile.tool.ts",

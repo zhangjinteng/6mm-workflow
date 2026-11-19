@@ -15,13 +15,18 @@
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
     "test:capabilities": "node scripts/smoke-capabilities.mjs",
+    "test:agent": "node scripts/smoke-agent.mjs",
+    "test:compression": "node --test scripts/smoke-compression.mjs",
     "test:sandbox": "node --env-file=.env.local --test scripts/smoke-sandbox.mjs",
     "test:api": "tsx scripts/smoke-workflow-nodes.ts",
     "test:models": "node --env-file=.env.local scripts/smoke-model-config.mjs",
+    "test:host-shell": "node --env-file=.env.local --import tsx scripts/smoke-host-shell.ts",
     "migrate:model-credentials": "node --env-file=.env.local --import tsx scripts/migrate-model-credentials.ts",
     "migrate:nodes": "node scripts/migrate-workflow-nodes.mjs"
   },
   "dependencies": {
+    "@mariozechner/pi-agent-core": "0.67.3",
+    "@mariozechner/pi-ai": "0.67.3",
     "@xmldom/xmldom": "0.9.10",
     "gpt-tokenizer": "3.4.0",
     "iconv-lite": "0.6.3",

@@ -63,10 +63,10 @@ after(async () => {
   }
 });
 
-test("52 nodes visible, eight new routes discoverable", async () => {
+test("59 nodes visible, eight new routes discoverable", async () => {
   const page = await (await fetch(base + "/nodes")).text();
   const catalog = (await api("/api/capabilities")).data;
-  assert.equal(catalog.length, 31);
+  assert.equal(catalog.length, 38);
   for (const name of [
     "sandboxShell",
     "sandboxReadFile",
@@ -82,7 +82,7 @@ test("52 nodes visible, eight new routes discoverable", async () => {
     assert.equal(data.method, "POST");
     assert.equal(data.route, "/api/workflow/nodes/" + name);
   }
-  assert.equal((page.match(/class="method"/g) || []).length, 52);
+  assert.equal((page.match(/class="method"/g) || []).length, 59);
 });
 
 test("upload, import, read lines, atomic edits, glob search and immutable download", async () => {

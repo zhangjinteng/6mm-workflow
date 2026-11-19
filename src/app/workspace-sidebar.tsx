@@ -7,12 +7,13 @@ import {
   Cpu,
   ChevronDown,
   CircleHelp,
+  Terminal,
 } from "lucide-react";
 export function WorkspaceSidebar({
   active,
   models,
 }: {
-  active: "models" | "skills";
+  active: "models" | "skills" | "shell";
   models?: number;
 }) {
   return (
@@ -55,6 +56,9 @@ export function WorkspaceSidebar({
         >
           <BookOpen size={17} />
           Skill 管理
+        </Link>
+        <Link className={active === "shell" ? "nav-item selected" : "nav-item"} aria-current={active === "shell" ? "page" : undefined} href="/shell" title="Shell 控制台">
+          <Terminal size={17} />Shell 控制台
         </Link>
       </nav>
       <div className="sidebar-bottom">

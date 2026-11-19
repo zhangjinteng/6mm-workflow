@@ -1,6 +1,6 @@
 # 16080 工作流能力接口
 
-本机服务地址为 `http://127.0.0.1:16080`。在 `/nodes` 查看原有 21 个节点和新增 31 个节点。新节点均为固定 POST 路由，前缀为 `/api/workflow/nodes/`。请求使用 `application/json`，复用既有节点的 `{params, variables?, context?}` 结构。成功结果在 `data.result`，执行标识在 `data.requestId`。
+本机服务地址为 `http://127.0.0.1:16080`。在 `/nodes` 查看原有 21 个节点和新增 38 个节点。新节点均为固定 POST 路由，前缀为 `/api/workflow/nodes/`。请求使用 `application/json`，复用既有节点的 `{params, variables?, context?}` 结构。成功结果在 `data.result`，执行标识在 `data.requestId`。
 
 ## 接口清单
 
@@ -29,6 +29,10 @@
 | `modelRerank` | query、documents，可选 modelId、topN | results 数组，含 index、relevance_score |
 | `modelTts` | input，可选 modelId、voice | file.id 指向 MP3 文件 |
 | `modelStt` | fileId，可选 modelId、language | text |
+| `compressHistory` | messages，可选 modelId、maxTokens、budgetTokens | 可直接复用的 messages，可空的 checkpoint 和统计 |
+| `compressFile` | fileId，可选 encoding、customPdfParse、modelId、budgetTokens | fileId、filename、text 和统计 |
+| `compressToolResult` | toolName、result（文本或 JSON），可选 currentInputTokens、toolCount、modelId、budgetTokens | toolName、text 和统计 |
+| `compressDatasetResults` | query、chunks（每块含 id、text，可选 source、score），可选 modelId、budgetTokens | selectedIds、对应原文 chunks 和统计 |
 | `sandboxReadFile` | sessionId、path，可选 startLine、endLine（从 1 开始，含结束行） | path、startLine、endLine、totalLines、content |
 | `sandboxWriteFile` | sessionId、path、content | path、bytes |
 | `sandboxEditFile` | sessionId、entries，每项含 path、oldContent、newContent | paths；按顺序替换所有匹配原文，整批提交 |
@@ -121,3 +125,92 @@ node scripts/capability-routes.mjs --source=/absolute/path/to/workflow-zjt
 部署中如需原执行器，可使用项目根目录的 `compose.sandbox.yaml`。为 Compose 和 16080 设置相同的 `WORKFLOW_CODE_SANDBOX_TOKEN`，执行 `docker compose -f compose.sandbox.yaml up -d`，再将 16080 的 `WORKFLOW_CODE_SANDBOX_URL` 设为 `http://127.0.0.1:16082` 并重启。留空时直接使用内置执行器。原服务的执行时限由 `SANDBOX_MAX_TIMEOUT` 控制，节点的 `timeout` 另外限制 HTTP 等待时间。代码服务离线时，两个代码节点返回 503，会话文件节点和 Shell 仍可用。
 
 在配置好本实例 MongoDB 且 16080 运行时，`pnpm test:sandbox` 验证 8 个接口、会话隔离、下载过期、异常和超时。测试只操作各用例创建的会话、上传与快照。
+
+## 上下文压缩
+
+四个压缩节点均支持可选的 `maxTokens`（给正式回答预留）、`budgetTokens`（进一步收紧输入或结果预算）、`censor` 或 `policyId`。指定已启用的语言模型记录 ID，或使用默认语言模型。每次调用返回 `tokensBefore`、`tokensAfter`、`budgetTokens`、`strategy`、`modelCalls` 和 `warnings`。前三项均使用本地 o200k 分词估算；供应商返回的实际用量列在 `data.usages`。
+
+历史达到模型窗口的 80%，或超过本次实际输入预算时，保留系统指令、最新用户问题及其后的消息，压缩较早历史。文件和工具结果默认上限为窗口的一半，同时受可用空间限制。超过预算先去除长链接、内嵌数据和冗余空白，仍超限则分块摘要。知识库结果超过窗口的 20% 或本次分配预算时，模型按 query 选择 ID；异常或无有效 ID 时按分数和输入顺序装入完整原文。无法容纳任何完整分块会返回空列表和警告。
+
+`POST /api/workflow/nodes/modelChat` 默认关闭压缩。以下示例使用默认语言模型：
+
+```json
+{
+  "params": {
+    "messages": [{"role":"user","content":"根据验收记录，谁负责核对订单？"}],
+    "compression": {
+      "enabled": true,
+      "sources": [
+        {"type":"tool","toolName":"orderStatus","result":{"status":"待验收"}},
+        {"type":"dataset","query":"订单核对负责人","chunks":[{"id":"r1","text":"小林负责核对订单。","source":"验收记录"}]}
+      ]
+    }
+  }
+}
+```
+
+文件来源形如 `{"type":"file","fileId":"已上传文件的 UUID"}`，可选 encoding、customPdfParse。只传 `{"enabled":true}` 时仅检查历史。系统先为回答预留 `min(maxTokens 或 maxResponse, maxResponse)`，另外保留窗口的 2%（至少 8 Token）作为估算余量，再分配来源与历史预算。所有来源和消息先通过本次启用的审核策略，然后才可调用摘要、筛选或聊天模型。默认和显式关闭时均走原聊天路径。
+
+正式模型响应仍在 `data.result`，启用压缩时另返回 `data.compression`，含各来源统计、历史统计、可复用的 checkpoint 以及警告。其 `modelCalls` 只计摘要与筛选调用。checkpoint 以 user 消息携带进入下轮，请同时提供之后新增的对话。系统指令和当前问题超限、或历史/文件/工具结果超过预算且摘要失败时返回 422。接口不依赖 3011。运行 `pnpm test:compression` 将使用当前启用的真实语言模型和合成测试数据，可用 `COMPRESSION_MODEL_ID` 指定记录。
+
+## Agent 执行与工具装配
+
+| 方法与路径 | 输入 | 返回 |
+|---|---|---|
+| POST `/api/workflow/nodes/previewAgentTools` | 模型、工具、会话、附件、Skills、沙箱及模态配置 | 有效引擎、工具 Schema、被排除的工具及原因、固定的 Skill 版本、附件处理方式。预览只读取配置和元数据 |
+| POST `/api/workflow/nodes/runAgent` | 相同配置加 `message`。可传 `background: true`、`maxSteps`、`runId`、`datasetChunks` | 运行 ID、会话 ID、状态、答案、工具调用与实际模型用量 |
+| POST `/api/workflow/nodes/resumeAgent` | `runId`、`interactionId`、`answer` | 继续同一次运行。重复回答返回已保存状态，冲突回答返回 409 |
+| GET `/api/agent/runs/{runId}` | 路径中的运行 ID | `data.status`、`pending`、`plan`、`trace`、`answer` 或 `error` |
+| POST `/api/agent/runs/{runId}/cancel` | 路径中的运行 ID | 取消后续工作，返回终态；已完成的工具操作保留 |
+
+先用 `POST /api/files?name=inventory.txt` 上传文件，再将返回的 `data.id` 传入运行节点。以下示例的两个 ID 均需替换。
+
+```json
+{
+  "params": {
+    "engine": "default",
+    "modelId": "<语言模型记录 UUID>",
+    "message": "读取盘点记录，返回正文中的核验码。",
+    "attachments": [{"fileId":"<上传文件 UUID>"}],
+    "maxSteps": 8
+  }
+}
+```
+
+节点结果位于 `data.result`。同步请求等到完成、失败或等待用户输入；后台请求可立即查询。状态为 `queued`、`running`、`waiting_input`、`waiting_approval`、`completed`、`failed` 或 `cancelled`。调用方应检查状态和 `error`。追问时取 `pending.interactionId`，提交给恢复节点；本机命令审批使用 `pendingApproval.executionId`，不接受普通追问回答作为授权。相同 `runId` 与相同请求可安全重试。每个会话同一时刻只能有一次活动运行。MongoDB 集合 `workflow16080_agent_runs` 保存运行快照，查询会重新调度排队或租约超时的任务。中断时结果不明确的工具调用将结束为失败，便于核对。
+
+- `selectedTools` 接受本地工具名。可选文本工具有 `htmlToMarkdown`、`textToChunks`。`canSelectFile` 控制 `read_files`，文件 ID 受当前及历史可见文档限制。`ask_agent`、`update_plan` 随运行装配。
+- `sessionId` 跨任务复用历史及附件。`skills: [{skillId,version}]` 可省略版本，默认固定当前发布版本。`editSkillId` 选择草稿快照。工作区的编辑只保存在沙箱中。Skill 会启用文件沙箱，模型按需读取包内说明和资源。
+- `sandbox` 取 `off`、`workspace-write` 或 `isolated-shell`。文件工具包括读取、写入、编辑、搜索和生成下载链接，最后一种模式还可装配隔离 Shell；服务端权限设定仍生效。
+- `selectedTools: ["host_shell"]` 显式装配真实本机执行工具，参数为 `command`、可选绝对路径 `cwd`、`timeout`（1至120秒，默认30秒）。是否可用及审批规则由 `/shell` 的服务端模式决定，不接受工具参数提权；原虚拟沙箱工具保持不变。
+- `modalities.vision` 需要模型标记支持视觉，图片通过协议中的原生图片块发送。`modalities.audio: "transcribe"` 可配 `sttModelId` 或使用默认转写模型。预览会列出原生音视频、未知格式和缺少模型配置的原因。
+- `datasetChunks` 传入外部已检索的 `{id,text,source?,score?}`。运行按预算选取资料；文件、工具及历史超预算会压缩。每个工具调用按 ID 对应结果；当前尚未完成的调用组保留。`censor` 与 `policyId` 可启用已有文本审核策略。
+
+## Shell 控制台接口
+
+所有接口仅本地同源访问，返回 `data`，错误为 `error`。本机执行没有 OS 隔离，详见 README 的权限和日志限制。
+
+| 接口 | 输入 | 返回 |
+| --- | --- | --- |
+| `GET /api/shell/policy` | 无 | mode、cwd、revision、updatedAt、disabled |
+| `PUT /api/shell/policy` | mode、cwd（本机绝对路径）、revision；本机模式要求 acknowledged: true | 更新后的服务端模式；旧审批失效 |
+| `GET /api/shell/executions` | 无 | 最新50条执行记录，包含待审批及执行中任务 |
+| `POST /api/shell/executions` | requestId（UUID）、policyRevision、command、timeout；可选 cwd | 执行记录或 pending 审批记录，相同 requestId 与命令重放不重复执行；权限版本不符时拒绝执行 |
+| `GET /api/shell/executions/{id}` | 执行标识 | 单条执行记录 |
+| `POST /api/shell/executions/{id}` | decision: approve / deny / cancel，confirmed: true | 批准、拒绝或取消后的记录 |
+
+模式为 `isolated-shell`、`host-shell`、`danger-full-access`。记录包含 id、command（脱敏）、cwd、mode、timeout、status、reason、source、runId/toolCallId（Agent来源）、stdout/stderr、exitCode、durationMs、truncated、createdAt/finishedAt/expiresAt。status 为 pending / running / completed / failed / denied / cancelled / expired / interrupted；记录中不返回内部原始命令 payload。
+
+```json
+{
+  "params": {
+    "message": "请检查本机当前工作目录",
+    "selectedTools": ["host_shell"],
+    "maxSteps": 4
+  }
+}
+```
+
+以上请求发送至 `POST /api/workflow/nodes/runAgent`，前提是在本地控制台显式启用本机模式。审批后可查询 `GET /api/agent/runs/{runId}` 继续调度。完全访问模式不产生逐条审批，但仍保留日志、超时、取消、输入校验和本地访问限制。
+- 默认引擎通过 `AGENT_ENGINE` 设置，允许的引擎通过 `WORKFLOW_AGENT_ENGINES` 设置，默认允许 `default,pi`。`default` 使用 OpenAI 兼容或 Anthropic 协议，`pi` 通过锁定的 SDK 和本服务的模型连接运行。Pi 默认开放实测的 DeepSeek deepseek-flash，其他已验证的兼容模型可按上游 ID 添加到 `WORKFLOW_AGENT_PI_MODELS`（逗号分隔）。
+- 真实模型验收运行 `pnpm test:agent`；完整 Skill、沙箱写文件及追问用例运行 `node scripts/smoke-agent-session.mjs`。两者支持 `AGENT_TEST_MODEL_ID`，使用当前服务的模型额度。默认目标为本机 16080。

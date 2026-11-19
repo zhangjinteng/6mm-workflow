@@ -107,7 +107,7 @@ export async function getTestTarget(id: string) {
   if (!row) throw new ModelError(404, "模型不存在");
   const credential = row.credentialId ? await credentials(db).findOne({ _id: row.credentialId, modelId: id }) : null;
   if (!credential || typeof credential.apiKey !== "string" || !credential.apiKey.trim()) throw new ModelError(409, "模型没有可用明文凭据，请迁移旧凭据或重新填写 API Key");
-  return { input: row.metadata, apiKey: credential.apiKey, revision: row.revision };
+  return { id: row._id, input: row.metadata, apiKey: credential.apiKey, revision: row.revision };
 }
 export async function recordTest(id: string, revision: number, result: { success: boolean; latencyMs: number; message: string }) {
   const db = await database(); await models(db).updateOne({ _id: id, revision, deletedAt: { $exists: false } }, { $set: { lastTest: { ...result, testedAt: new Date() } } });

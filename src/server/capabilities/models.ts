@@ -1,24 +1,18 @@
 import { z } from "zod";
 import { getTestTarget, database } from "../model-config/repository";
-import type { ModelType } from "../../lib/model-config";
+import { chatMessage, compressionOption } from "../compression/schema";
+import type { ModelInput, ModelType } from "../../lib/model-config";
 import { getFile, saveFile } from "./files";
 import { send, decode, multipart } from "./network";
 import { ModelError } from "./base";
 const id = z.uuid().optional();
 const input = z.string().min(1);
-const messages = z
-  .array(
-    z.object({
-      role: z.enum(["system", "assistant", "user"]),
-      content: z.string(),
-    }),
-  )
-  .min(1);
 export const modelSchemas = {
   modelChat: z
     .object({
       modelId: id,
-      messages,
+      messages: z.array(chatMessage).min(1),
+      compression: compressionOption.optional(),
       censor: z.boolean().optional(),
       policyId: id,
       maxTokens: z.number().int().positive().optional(),
@@ -48,7 +42,7 @@ export const types = {
   modelTts: "tts",
   modelStt: "stt",
 } as const;
-async function target(type: ModelType, id?: string) {
+export async function target(type: ModelType, id?: string) {
   if (!id) {
     const db = await database();
     const row = await db
@@ -65,20 +59,45 @@ async function target(type: ModelType, id?: string) {
     throw new ModelError(409, "模型未启用或类型不匹配");
   return model;
 }
+export type ChatInput = z.infer<typeof modelSchemas.modelChat>;
+export function chatPayload(model: ModelInput, p: ChatInput) {
+  const anthropic = model.protocol === "anthropic";
+  const json: Record<string, unknown> = {
+    ...model.defaultConfig,
+    model: model.upstreamModel,
+  };
+  json.messages = anthropic
+    ? p.messages.filter((m) => m.role !== "system")
+    : p.messages;
+  if (anthropic) {
+    const system = p.messages
+      .filter((m) => m.role === "system")
+      .map((m) => m.content)
+      .join("\n");
+    if (system) json.system = system;
+  }
+  json.stream = false;
+  json.max_tokens = Math.min(
+    p.maxTokens || model.maxResponse,
+    model.maxResponse,
+  );
+  if (p.temperature !== undefined) json.temperature = p.temperature;
+  return json;
+}
 export async function callModel(
   name: keyof typeof types,
   params: unknown,
-  load = target,
+  load: (type: ModelType, id?: string) => Promise<Omit<Awaited<ReturnType<typeof target>>, "id">> = target,
   transport = send,
 ) {
   const modelId = z.object({ modelId: id }).parse(params).modelId;
   const { input: model, apiKey } = await load(types[name], modelId);
   const anthropic = model.protocol === "anthropic";
   let endpoint = "";
-  const json: Record<string, unknown> = {
-    ...model.defaultConfig,
-    model: model.upstreamModel,
-  };
+  const json: Record<string, unknown> =
+    name === "modelChat"
+      ? chatPayload(model, modelSchemas.modelChat.parse(params))
+      : { ...model.defaultConfig, model: model.upstreamModel };
   const headers: Record<string, string> = anthropic
     ? { "x-api-key": apiKey, "anthropic-version": "2023-06-01" }
     : { Authorization: "Bearer " + apiKey };
@@ -86,24 +105,7 @@ export async function callModel(
   let body: Buffer | undefined;
   switch (name) {
     case "modelChat": {
-      const p = modelSchemas.modelChat.parse(params);
       endpoint = anthropic ? "messages" : "chat/completions";
-      json.messages = anthropic
-        ? p.messages.filter((m) => m.role !== "system")
-        : p.messages;
-      if (anthropic) {
-        const system = p.messages
-          .filter((m) => m.role === "system")
-          .map((m) => m.content)
-          .join("\n");
-        if (system) json.system = system;
-      }
-      json.stream = false;
-      json.max_tokens = Math.min(
-        p.maxTokens || model.maxResponse,
-        model.maxResponse,
-      );
-      if (p.temperature !== undefined) json.temperature = p.temperature;
       break;
     }
     case "modelEmbed":

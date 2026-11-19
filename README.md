@@ -123,7 +123,7 @@ pnpm migrate:model-credentials --apply  # 写入 apiKey 并移除旧 secret 字�
 
 ## 文件、文本、审核与模型节点
 
-16080 新增 31 个独立节点，连同原有节点共 52 个。完整路由、参数、配置、调用示例和测试方法见[接口清单](docs/capabilities.md)。运行中的服务通过 `GET /api/capabilities` 提供新增节点的参数 Schema。
+16080 新增 38 个独立节点，连同原有节点共 59 个。完整路由、参数、配置、调用示例和测试方法见[接口清单](docs/capabilities.md)。运行中的服务通过 `GET /api/capabilities` 提供新增节点的参数 Schema。
 
 ## Skill 管理
 
@@ -132,3 +132,31 @@ pnpm migrate:model-credentials --apply  # 写入 apiKey 并移除旧 secret 字�
 模型试跑将所选草稿或发布版本的 SKILL.md 与测试输入发送给选定的语言模型。试跑仅在点击开始后发起，按所选供应商计费。资源脚本不参与执行。
 
 Skill 元数据由 `workflow16080_skills` 集合保存，试跑的模型、版本及请求标识记录于 `workflow16080_skill_trials`。ZIP 包位于 `.workflow-data/skills`，可通过 `WORKFLOW_SKILL_DIR` 指定持久目录。备份或搬迁时应同时保留 MongoDB 数据和包目录。
+
+## 本机 Shell
+
+侧栏「Shell 控制台」打开 `/shell`，可切换执行模式、运行命令、批准或拒绝待执行命令、取消任务并查看日志。
+
+| 模式 | 行为 |
+| --- | --- |
+| `isolated-shell`（默认） | 沿用 `just-bash` 虚拟工作区，不启动宿主机 Shell |
+| `host-shell` | 运行真实 `/bin/sh -c`；只有固定的 `pwd`、`whoami`、`uname` 诊断命令免审批，其他命令均需批准本次执行 |
+| `danger-full-access` | 真实本机执行，不再逐条确认命令；启用时需在本地界面确认一次风险 |
+
+本机执行不是操作系统沙箱，工作目录也不是文件访问边界。命令具有服务进程系统账号的权限，可以访问该账号能访问的文件、网络和凭据。完全访问模式可能直接删除文件、安装程序、推送或部署。不要把本服务开放公网，不要向不可信调用方提供本地接口。子进程不继承数据库密码、模型密钥、HOME 或 Shell 启动钩子；这不能阻止已获授权的任意命令主动读取磁盘上的凭据。
+
+Agent 显式传 `selectedTools: ["host_shell"]` 后可使用真实本机工具；服务端必须已经切换到本机模式。原 `sandbox_shell`、沙箱文件工具和 Skill 工作区不变，仍是虚拟路径。`host_shell` 的 `cwd` 必须是本机绝对路径；省略时使用控制台保存的工作目录。虚拟 `/workspace` 不会自动映射到本机。工具参数不能更改权限或批准自身。
+
+审批模式下，Agent 状态为 `waiting_approval`，`pendingApproval.executionId` 对应控制台中的审批记录。批准或拒绝后查询运行接口会继续调度；批准接口也会触发调度。不使用 `resumeAgent` 的用户追问回答来授权命令。命令、目录、超时及模式版本不可替换；模式/目录变化使旧审批失效，批准有效期为15分钟。请求重放复用原结果，不会再次执行。结果不明确的中断任务不得自动重跑。
+
+超时最长120秒（隔离模式60秒），每个本机进程 stdout/stderr 各限制256 KiB，同一服务进程最多并发2个任务。超时、取消或权限改变会终止原进程组；主动逃逸进程组的程序不在这一机制的隔离保证范围内。
+
+`WORKFLOW_HOST_SHELL_DISABLED=1` 强制禁用本机执行；已有 `WORKFLOW_SANDBOX_MODE=workspace-write` 也会禁止本机执行。运行时模式不影响默认 Agent 工具选择，必须显式选择 `host_shell`。
+
+记录使用 `workflow16080_shell_executions`、`workflow16080_shell_policy`、`workflow16080_shell_policy_events`。日志保留状态、模式、目录、命令、输出、退出码、耗时、来源与 Agent 运行标识，不自动删除。日志对已知凭据及常见敏感格式脱敏，但不是完整的数据防泄露系统。待审批/执行中的原始命令暂存于内部 `payload` 字段，以支持精确授权和重启恢复；终态、过期或失效后移除，不通过日志接口回传。不要在命令中嵌入密码或密钥。
+
+```sh
+pnpm test:host-shell
+```
+
+验收会短暂切换模式，只执行临时目录中的无害命令，验证审批、去重、拒绝、超时、取消、脱敏及两个 Agent 引擎的暂停恢复；使用合成模型响应，不调用付费模型。仅允许从隔离模式且没有活动任务时启动，结束恢复隔离模式，清理本次测试记录。

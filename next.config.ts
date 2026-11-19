@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["xlsx", "joplin-turndown-plugin-gfm", "pdfjs-dist"],
+  serverExternalPackages: ["@mariozechner/pi-ai", "@mariozechner/pi-agent-core", "xlsx", "joplin-turndown-plugin-gfm", "pdfjs-dist"],
   outputFileTracingExcludes: {
     "/*": [
       "./.git/**/*",

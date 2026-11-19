@@ -98,7 +98,7 @@ async function office() {
 }
 try {
   const catalog = (await api("/api/capabilities")).data;
-  assert.equal(catalog.length, 31);
+  assert.equal(catalog.length, 38);
   assert.equal(
     (await api("/api/capabilities/modelChat")).data.name,
     "modelChat",

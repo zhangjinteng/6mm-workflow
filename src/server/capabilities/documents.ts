@@ -60,10 +60,19 @@ type Parsed = {
   pages?: number;
   imageList?: { uuid: string; mime: string; base64: string }[];
 };
-async function normalize(parsed: Parsed, parser: string, created: string[]) {
+async function normalize(
+  parsed: Parsed,
+  parser: string,
+  created: string[],
+  textOnly = false,
+) {
   let text = parsed.formatText ?? parsed.rawText;
   const images = [];
   for (const image of parsed.imageList || []) {
+    if (textOnly) {
+      text = text.replaceAll(image.uuid, "[图片]");
+      continue;
+    }
     const file = await saveFile(
       Buffer.from(image.base64, "base64"),
       "image." + (image.mime.split("/")[1] || "bin"),
@@ -82,14 +91,14 @@ async function normalize(parsed: Parsed, parser: string, created: string[]) {
   };
 }
 async function parse(
-  file: string,
+  f: Awaited<ReturnType<typeof getFile>>,
   created: string[],
   kind?: string,
   encoding?: string,
   custom = false,
   integrationId?: string,
+  textOnly = false,
 ) {
-  const f = await getFile(file);
   const extension = path.extname(f.meta.name).slice(1).toLowerCase();
   let provider = Object.values(providers).find((p) => p === kind);
   let connection = provider
@@ -125,10 +134,28 @@ async function parse(
       },
       connection.kind,
       created,
+      textOnly,
     );
   }
   const parsed = await runWorker(expected, { encoding }, bytes);
-  return normalize(parsed, provider || expected, created);
+  return normalize(parsed, provider || expected, created, textOnly);
+}
+export async function readCompressionFile(p: {
+  fileId: string;
+  encoding?: string;
+  customPdfParse?: boolean;
+}) {
+  const file = await getFile(p.fileId);
+  const { text } = await parse(
+    file,
+    [],
+    undefined,
+    p.encoding,
+    p.customPdfParse,
+    undefined,
+    true,
+  );
+  return { filename: file.meta.name, text };
 }
 export async function documentNode(name: string, input: unknown) {
   const created: string[] = [];
@@ -154,7 +181,13 @@ async function processDocument(
     for (const id of p.fileIds)
       files.push({
         fileId: id,
-        ...(await parse(id, created, undefined, undefined, p.customPdfParse)),
+        ...(await parse(
+          await getFile(id),
+          created,
+          undefined,
+          undefined,
+          p.customPdfParse,
+        )),
       });
     return { files };
   }
@@ -181,7 +214,7 @@ async function processDocument(
     formats[name as keyof typeof formats] ||
     providers[name as keyof typeof providers];
   const result = await parse(
-    p.fileId,
+    await getFile(p.fileId),
     created,
     kind,
     p.encoding,

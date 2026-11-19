@@ -9,6 +9,7 @@ export async function send(
   headers: Record<string, string>,
   body?: Buffer,
   timeout = 60000,
+  signal?: AbortSignal,
 ) {
   const { address } = await resolveEndpoint(url.origin).catch((error) => {
     if (error instanceof ModelError) throw error;
@@ -23,7 +24,7 @@ export async function send(
         headers,
         agent: false,
         lookup: pinnedLookup(address),
-        signal: AbortSignal.timeout(timeout),
+        signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(timeout)]) : AbortSignal.timeout(timeout),
       },
       (res) => {
         let size = 0;

@@ -20,6 +20,13 @@ const documents = Object.fromEntries(
 );
 const entries = {
   ...documents,
+  previewAgentTools: "service/core/workflow/dispatch/ai/agent/adapter/toolCatalog.ts",
+  runAgent: "service/core/workflow/dispatch/ai/agent/index.ts",
+  resumeAgent: "service/core/workflow/dispatch/ai/agent/index.ts",
+  compressHistory: "service/core/ai/llm/compress/index.ts",
+  compressFile: "service/core/workflow/dispatch/ai/agent/sub/file/index.ts",
+  compressToolResult: "service/core/ai/llm/compress/index.ts",
+  compressDatasetResults: "service/core/workflow/dispatch/ai/agent/sub/dataset/index.ts",
   ...Object.fromEntries(Object.entries({
     sandboxReadFile: "readFile", sandboxWriteFile: "writeFile", sandboxEditFile: "editFile",
     sandboxSearch: "search", sandboxGetFileUrl: "getFileUrl", sandboxShell: "shell",
