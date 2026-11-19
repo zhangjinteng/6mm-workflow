@@ -1,11 +1,9 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import capabilities from "@/server/capabilities/manifest.json";
-import originalNodes from "@/server/workflow-nodes/manifest.json";
+import { WorkspaceSidebar } from "../workspace-sidebar";
 import { useCallback, useEffect, useRef, useState, type ReactNode, type FormEvent } from "react";
-import Link from "next/link";
-import { ArrowLeft, Box, Check, CheckCircle2, ChevronDown, ChevronRight, CircleHelp, Cpu, Database, Eye, EyeOff, GitBranch, KeyRound, LoaderCircle, MoreHorizontal, Pencil, Play, Plus, RefreshCw, RotateCcw, Search, Settings2, ShieldCheck, Star, Trash2, X, XCircle } from "lucide-react";
+import { ArrowLeft, Box, Check, CheckCircle2, ChevronDown, ChevronRight, Cpu, Database, Eye, EyeOff, KeyRound, LoaderCircle, MoreHorizontal, Pencil, Play, Plus, RefreshCw, RotateCcw, Search, Settings2, ShieldCheck, Star, Trash2, X, XCircle } from "lucide-react";
 import { modelInputSchema, modelTypes, providerById, providers, typeNames, type ModelInput, type ModelList, type ModelType, type ModelView, type Provider } from "@/lib/model-config";
 
 async function api<T>(method = "GET", body?: unknown, path = "/api/models"): Promise<T> {
@@ -86,7 +84,7 @@ export default function ModelManager() {
   async function action(model: ModelView, value: string) { setBusy(model.id); try { await api("PATCH", { id: model.id, revision: model.revision, action: value }); await load(); setToast(value === "default" ? "默认模型已更新" : value === "delete" ? "已移入回收站" : value === "restore" ? "模型已恢复，当前为停用状态" : "模型状态已更新"); setDeleting(null); } catch (e) { setError((e as Error).message); } finally { setBusy(null); } }
   async function runTest() { if (!testing || !confirmed) return; setBusy(testing.id); try { setTestResult(await api("POST", { id: testing.id, revision: testing.revision, confirmed: true }, "/api/models/test")); await load(); } catch (e) { setTestResult({ success: false, latencyMs: 0, message: (e as Error).message }); } finally { setBusy(null); } }
   return <div className="workspace">
-    <aside className="sidebar"><Link href="/" className="brand"><span className="brand-icon"><GitBranch size={20} /></span><span>ZJT <strong>Workflow</strong></span></Link><div className="workspace-switch"><span className="workspace-avatar">W</span><span>本地工作空间<small>Local workspace</small></span><ChevronDown size={14} /></div><div className="nav-caption">工作空间</div><nav><Link className="nav-item selected" href="/models"><Cpu size={17} />模型配置<span className="nav-count">{current.length}</span></Link><Link className="nav-item" href="/nodes"><GitBranch size={17} />工作流节点<small>{originalNodes.nodes.length + capabilities.length}</small></Link></nav><div className="sidebar-bottom"><span className="local-badge"><span />本地服务 · 16080</span><a href="/api/health" target="_blank" title="服务状态" rel="noreferrer"><CircleHelp size={17} /></a></div></aside>
+    <WorkspaceSidebar active="models" models={current.length} />
     <div className="workspace-main"><header className="topbar"><span>工作空间<ChevronRight size={13} /><strong>模型配置</strong></span><span className="topbar-right"><ShieldCheck size={14} />仅本地访问<span className="avatar">W</span></span></header>
       <main className="model-content"><div className="page-heading"><div><div className="eyebrow">WORKSPACE / MODELS</div><h1>模型配置 <span>{current.length}</span></h1></div><button className="button primary" onClick={() => setEditor("new")}><Plus size={17} />添加模型</button></div>
         <div className="summary-band"><div><span className="summary-icon"><Cpu size={17} /></span><span>全部模型<strong>{current.length}</strong></span></div><div><span className="summary-icon teal"><CheckCircle2 size={17} /></span><span>已启用<strong>{active}</strong></span></div><div><span className="summary-icon amber"><Star size={17} /></span><span>默认模型<strong>{current.filter(m => m.isDefault).length}</strong></span></div><div className="database-status"><Database size={16} /><span className={data && !connectionFailed ? "connected" : ""}>{loading ? "正在连接" : connectionFailed ? "连接异常" : "MongoDB 已连接"}</span><small>{data?.database.name || "workflow"}</small></div></div>

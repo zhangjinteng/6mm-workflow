@@ -20,6 +20,12 @@ const documents = Object.fromEntries(
 );
 const entries = {
   ...documents,
+  ...Object.fromEntries(Object.entries({
+    sandboxReadFile: "readFile", sandboxWriteFile: "writeFile", sandboxEditFile: "editFile",
+    sandboxSearch: "search", sandboxGetFileUrl: "getFileUrl", sandboxShell: "shell",
+  }).map(([name, tool]) => [name, "service/core/ai/sandbox/toolCall/" + tool + ".tool.ts"])),
+  runJavaScript: "service/core/workflow/dispatch/tools/codeSandbox.ts",
+  runPython: "service/core/workflow/dispatch/tools/codeSandbox.ts",
   parsePdfCustom: "service/common/file/read/utils.ts",
   parsePdfTextIn: "service/thirdProvider/textin/index.ts",
   parsePdfDoc2x: "service/thirdProvider/doc2x/index.ts",

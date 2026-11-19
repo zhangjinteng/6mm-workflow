@@ -8,6 +8,8 @@ import { resolveIntegration } from "./integrations";
 import { moderate } from "./providers";
 import { audit, listAudit } from "./audit";
 
+import { sandboxSchemas, sandboxNode } from "../sandbox/nodes";
+
 const moderation = z
   .object({ text: z.string().min(1), policyId: z.uuid().optional() })
   .strict();
@@ -19,6 +21,7 @@ const logs = z
   .strict();
 export const schemas: Record<string, z.ZodType> = {
   ...documentSchemas,
+  ...sandboxSchemas,
   ...modelSchemas,
   moderateText: moderation,
   listAuditLogs: logs,
@@ -40,8 +43,37 @@ export function capabilityRoute(name: string) {
       const input = schemas[name].parse(params);
       const requestId = randomUUID();
       let result: unknown;
+      const warnings: string[] = [];
       try {
-        if (name === "moderateText") {
+        if (name in sandboxSchemas) {
+          const started = Date.now();
+          let outcome = "error";
+          try {
+            result = await sandboxNode(
+              name as keyof typeof sandboxSchemas,
+              input,
+            );
+            outcome = "completed";
+            if (
+              result &&
+              typeof result === "object" &&
+              "exitCode" in result &&
+              result.exitCode !== 0
+            )
+              outcome = result.exitCode === -1 ? "blocked" : "nonzeroExit";
+          } catch (error) {
+            if (error instanceof ModelError)
+              return Response.json(
+                { code: error.status, error: error.message, requestId },
+                { status: error.status },
+              );
+            throw error;
+          } finally {
+            await audit(name, requestId, outcome, Date.now() - started).catch(
+              () => warnings.push("调用审计写入失败"),
+            );
+          }
+        } else if (name === "moderateText") {
           const p = moderation.parse(input);
           result = await review(p.text, requestId, p.policyId);
         } else if (name === "listAuditLogs") {
@@ -81,7 +113,7 @@ export function capabilityRoute(name: string) {
             result && typeof result === "object" && "usage" in result
               ? [result.usage]
               : [],
-          warnings: [],
+          warnings,
         },
       });
     });

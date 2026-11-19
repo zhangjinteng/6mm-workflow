@@ -123,4 +123,12 @@ pnpm migrate:model-credentials --apply  # 写入 apiKey 并移除旧 secret 字�
 
 ## 文件、文本、审核与模型节点
 
-16080 新增 23 个独立节点，连同原有节点共 44 个。完整路由、参数、配置、调用示例和测试方法见[接口清单](docs/capabilities.md)。运行中的服务通过 `GET /api/capabilities` 提供新增节点的参数 Schema。
+16080 新增 31 个独立节点，连同原有节点共 52 个。完整路由、参数、配置、调用示例和测试方法见[接口清单](docs/capabilities.md)。运行中的服务通过 `GET /api/capabilities` 提供新增节点的参数 Schema。
+
+## Skill 管理
+
+工作区侧栏的「Skill 管理」打开 `/skills`。支持手工创建、复制、删除，编辑 SKILL.md 与附属资源，导入历史单 Skill 或多目录 ZIP 包，发布版本、切换生效版本并分别导出草稿或发布包。以压缩及解压后各 50 MiB 为包上限。
+
+模型试跑将所选草稿或发布版本的 SKILL.md 与测试输入发送给选定的语言模型。试跑仅在点击开始后发起，按所选供应商计费。资源脚本不参与执行。
+
+Skill 元数据由 `workflow16080_skills` 集合保存，试跑的模型、版本及请求标识记录于 `workflow16080_skill_trials`。ZIP 包位于 `.workflow-data/skills`，可通过 `WORKFLOW_SKILL_DIR` 指定持久目录。备份或搬迁时应同时保留 MongoDB 数据和包目录。

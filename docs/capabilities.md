@@ -1,6 +1,6 @@
-# 16080 文件、文本、审核与模型接口
+# 16080 工作流能力接口
 
-本机服务地址为 `http://127.0.0.1:16080`。在 `/nodes` 查看原有 21 个节点和新增 23 个节点。新节点均为固定 POST 路由，前缀为 `/api/workflow/nodes/`。请求使用 `application/json`，复用既有节点的 `{params, variables?, context?}` 结构。成功结果在 `data.result`，执行标识在 `data.requestId`。
+本机服务地址为 `http://127.0.0.1:16080`。在 `/nodes` 查看原有 21 个节点和新增 31 个节点。新节点均为固定 POST 路由，前缀为 `/api/workflow/nodes/`。请求使用 `application/json`，复用既有节点的 `{params, variables?, context?}` 结构。成功结果在 `data.result`，执行标识在 `data.requestId`。
 
 ## 接口清单
 
@@ -29,6 +29,14 @@
 | `modelRerank` | query、documents，可选 modelId、topN | results 数组，含 index、relevance_score |
 | `modelTts` | input，可选 modelId、voice | file.id 指向 MP3 文件 |
 | `modelStt` | fileId，可选 modelId、language | text |
+| `sandboxReadFile` | sessionId、path，可选 startLine、endLine（从 1 开始，含结束行） | path、startLine、endLine、totalLines、content |
+| `sandboxWriteFile` | sessionId、path、content | path、bytes |
+| `sandboxEditFile` | sessionId、entries，每项含 path、oldContent、newContent | paths；按顺序替换所有匹配原文，整批提交 |
+| `sandboxSearch` | sessionId、pattern，可选 path | paths；递归按文件或目录名匹配，支持 * 和 ? |
+| `sandboxGetFileUrl` | sessionId、paths | files，每项含 filename、fileUrl、expiresAt |
+| `sandboxShell` | sessionId、command，可选 timeout（秒） | stdout、stderr、exitCode |
+| `runJavaScript` | code，可选 variables、timeout | codeReturn、log；支持 async function main(variables) |
+| `runPython` | code，可选 variables、timeout | codeReturn、log；入口为 def main(variables) |
 
 解析类结果统一含 `text`、`parser`、`images`，增强 PDF 另含 `pages`。切块支持 `chunkSize`、`maxSize`、`overlapRatio`、`paragraphChunkDeep`、`paragraphChunkMinSize`。切块尽量保留段落与表格，`chunkSize` 为目标大小。批量读取每次 1–20 个文件。输入的精确类型、默认值、范围可通过能力目录读取。
 
@@ -84,3 +92,32 @@ node scripts/capability-routes.mjs --source=/absolute/path/to/workflow-zjt
 
 `pnpm test` 运行单元和上游协议测试。`pnpm test:api` 回归原有 21 个节点。`pnpm test:capabilities` 对运行中的服务上传临时样本，校验八种格式、文本、审核、模型错误与配置管理，并清理测试文件及连接；审核和模型调用的审计记录会保留。使用 `NODE_API_BASE_URL` 可测试独立的生产构建实例。
 
+
+## Agent 会话与独立代码执行
+
+| 方法 | 路径 | 请求与结果 |
+|---|---|---|
+| POST | `/api/sandbox/sessions` | 发 `{}` 或传 `fileIds`、`mode`。201 返回 `data.sessionId`、实际权限、到期时间及附件相对路径 |
+| GET | `/api/sandbox/sessions/{id}` | 查询有效会话及到期时间 |
+| DELETE | `/api/sandbox/sessions/{id}` | 关闭会话，取消活动 Shell；重复调用返回 204 |
+| GET | `/api/sandbox/artifacts/{token}` | 本机下载导出时的文件快照。链接自导出起有效两小时，早于到期关闭会话仍可下载 |
+
+工作目录和文件字节保存在 MongoDB 的 `workflow16080_sandbox_sessions`，有效期两小时。目录限 512 项，文件总计 8 MiB。输入文件可先通过 `/api/files` 上传，再按 `fileIds` 导入。文件节点使用相对路径，Shell 的起始目录为 `/workspace`。Shell 支持管道、重定向和内置 Unix 命令，使用虚拟文件系统。只有工作目录的文件和目录会写回会话；包含符号链接的变更会被拒绝。导出文件独立保存于 `workflow16080_sandbox_artifacts`，两类集合都有 TTL 索引，接口会即时校验有效期。
+
+服务端 `WORKFLOW_SANDBOX_MODE` 默认值为 `isolated-shell`，创建会话时可降为 `workspace-write`。若服务端设为 `workspace-write`，现有会话也会禁止 Shell，工具返回 `exitCode: -1`。并发修改同一会话时只有与当前版本一致的修改会提交，冲突返回 409。执行结果和耗时可用 `listAuditLogs` 按节点名查询。
+
+两个代码节点每次创建独立的执行环境。默认使用随依赖安装的 QuickJS 和 CPython WebAssembly 执行器，在单独的 Node 子进程运行。只传递 `params.variables`，顶层 `variables` 仍是工作流状态。默认执行环境可以使用运行时内置模块，可用模块与原服务的第三方模块白名单有差异。Shell、JS、Python 默认限时 15 秒，可指定 1–60 秒，每个 16080 服务进程同时运行最多 4 个执行任务。
+
+例如，以下输入计算两数之和。
+
+```json
+{"params":{"code":"def main(v):\n return {'sum': v['a'] + v['b']}","variables":{"a":19,"b":23}}}
+```
+
+将上面的 JSON 发给 `POST /api/workflow/nodes/runPython`，结果在 `data.result.codeReturn.sum`。一般代码异常返回 422，超时返回 504，并发已满返回 429。
+
+### 使用原 Code Sandbox 协议
+
+部署中如需原执行器，可使用项目根目录的 `compose.sandbox.yaml`。为 Compose 和 16080 设置相同的 `WORKFLOW_CODE_SANDBOX_TOKEN`，执行 `docker compose -f compose.sandbox.yaml up -d`，再将 16080 的 `WORKFLOW_CODE_SANDBOX_URL` 设为 `http://127.0.0.1:16082` 并重启。留空时直接使用内置执行器。原服务的执行时限由 `SANDBOX_MAX_TIMEOUT` 控制，节点的 `timeout` 另外限制 HTTP 等待时间。代码服务离线时，两个代码节点返回 503，会话文件节点和 Shell 仍可用。
+
+在配置好本实例 MongoDB 且 16080 运行时，`pnpm test:sandbox` 验证 8 个接口、会话隔离、下载过期、异常和超时。测试只操作各用例创建的会话、上传与快照。

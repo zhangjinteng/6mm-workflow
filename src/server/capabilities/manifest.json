@@ -48,6 +48,54 @@
     "sha256": "e1e32becf1a23657386de78f0a87222f28118e359e16f323e1946f6186a9e912"
   },
   {
+    "name": "sandboxReadFile",
+    "route": "/api/workflow/nodes/sandboxReadFile",
+    "reference": "service/core/ai/sandbox/toolCall/readFile.tool.ts",
+    "sha256": "5a84aa8a17a658f753c556da2fd7397280c5d8f11d2e5a0e1c4acaa837dc9f52"
+  },
+  {
+    "name": "sandboxWriteFile",
+    "route": "/api/workflow/nodes/sandboxWriteFile",
+    "reference": "service/core/ai/sandbox/toolCall/writeFile.tool.ts",
+    "sha256": "d1a8eaf5e42034727713fff608f1cbb87923d4a036646021fbb9705c8146337a"
+  },
+  {
+    "name": "sandboxEditFile",
+    "route": "/api/workflow/nodes/sandboxEditFile",
+    "reference": "service/core/ai/sandbox/toolCall/editFile.tool.ts",
+    "sha256": "1a24f0aa041f7177afe3086253ebaa22ffa36914a77249db36409a4ed450a44c"
+  },
+  {
+    "name": "sandboxSearch",
+    "route": "/api/workflow/nodes/sandboxSearch",
+    "reference": "service/core/ai/sandbox/toolCall/search.tool.ts",
+    "sha256": "92fc7513d60d6e5345dfcb7e56e504b11291f65a01eb2ccd50db9b202b78964b"
+  },
+  {
+    "name": "sandboxGetFileUrl",
+    "route": "/api/workflow/nodes/sandboxGetFileUrl",
+    "reference": "service/core/ai/sandbox/toolCall/getFileUrl.tool.ts",
+    "sha256": "a71dea2b32748103cd37898180461b3af51d97cbd45bd85fd92724fe6b3f8b12"
+  },
+  {
+    "name": "sandboxShell",
+    "route": "/api/workflow/nodes/sandboxShell",
+    "reference": "service/core/ai/sandbox/toolCall/shell.tool.ts",
+    "sha256": "28794c8db4a12adf4114953f6bbc0cf90f7644ca4c31f5a0be1fb6e5fbbbf38c"
+  },
+  {
+    "name": "runJavaScript",
+    "route": "/api/workflow/nodes/runJavaScript",
+    "reference": "service/core/workflow/dispatch/tools/codeSandbox.ts",
+    "sha256": "9aab01d62e1013ef2a18df0747bc15471a7145430658d4e40606b86902ba7628"
+  },
+  {
+    "name": "runPython",
+    "route": "/api/workflow/nodes/runPython",
+    "reference": "service/core/workflow/dispatch/tools/codeSandbox.ts",
+    "sha256": "9aab01d62e1013ef2a18df0747bc15471a7145430658d4e40606b86902ba7628"
+  },
+  {
     "name": "parsePdfCustom",
     "route": "/api/workflow/nodes/parsePdfCustom",
     "reference": "service/common/file/read/utils.ts",

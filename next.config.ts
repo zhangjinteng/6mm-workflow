@@ -14,6 +14,8 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/workflow/nodes/*": [
       "./workers/**/*",
+      "./node_modules/just-bash/**/*",
+      "./node_modules/.pnpm/{just-bash@*,run@*}/node_modules/**/*",
       "./node_modules/.pnpm/{pdfjs-dist*,@napi-rs+canvas*,mammoth*,turndown*,joplin-turndown*,xlsx*,jszip*,iconv-lite*,papaparse*}/**/*",
     ],
   },

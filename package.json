@@ -5,7 +5,7 @@
   "type": "module",
   "packageManager": "pnpm@10.14.0",
   "engines": {
-    "node": ">=20.9.0"
+    "node": ">=20.19.0"
   },
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1 --port 16080",
@@ -15,6 +15,7 @@
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
     "test:capabilities": "node scripts/smoke-capabilities.mjs",
+    "test:sandbox": "node --env-file=.env.local --test scripts/smoke-sandbox.mjs",
     "test:api": "tsx scripts/smoke-workflow-nodes.ts",
     "test:models": "node --env-file=.env.local scripts/smoke-model-config.mjs",
     "migrate:model-credentials": "node --env-file=.env.local --import tsx scripts/migrate-model-credentials.ts",
@@ -27,6 +28,7 @@
     "joplin-turndown-plugin-gfm": "1.0.12",
     "json5": "^2.2.3",
     "jszip": "3.10.1",
+    "just-bash": "3.6.1",
     "lodash": "4.17.23",
     "lucide-react": "^1.74.0",
     "mammoth": "1.11.0",
@@ -39,6 +41,7 @@
     "react-dom": "19.3.1",
     "turndown": "7.2.0",
     "xlsx": "0.18.5",
+    "yaml": "^2.9.1",
     "zod": "^4.6.7"
   },
   "devDependencies": {

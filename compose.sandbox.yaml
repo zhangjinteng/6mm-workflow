@@ -1,0 +1,18 @@
+# Optional upstream-compatible code executor. 16080 uses its bundled WASM worker by default.
+services:
+  code-sandbox:
+    image: ghcr.io/labring/fastgpt-code-sandbox:v4.15.0-beta1
+    ports:
+      - "127.0.0.1:16082:3000"
+    environment:
+      SANDBOX_TOKEN: ${WORKFLOW_CODE_SANDBOX_TOKEN:?Set WORKFLOW_CODE_SANDBOX_TOKEN}
+      SANDBOX_POOL_SIZE: "2"
+      SANDBOX_MAX_TIMEOUT: "15000"
+      SANDBOX_MAX_OUTPUT_MB: "1"
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m,noexec,nosuid,nodev
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 1g
+    pids_limit: 96
